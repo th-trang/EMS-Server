@@ -9,4 +9,4 @@ const pool = mysql.createPool({
     password: config.password
 })
 
-module.exports = pool.promise(); 
+exports.pool = pool.promise(); 
