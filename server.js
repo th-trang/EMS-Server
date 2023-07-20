@@ -7,7 +7,7 @@ const customizeRoutes = require('./routes/customize')
 const dashboardRoutes = require('./routes/dashboard')
 const errorController = require('./controllers/error')
 const cors = require('cors')
-const data$ = require('./controllers/function');
+const data$ = require('./util/function');
 
 const main = express();
 const ports = process.env.PORT || 3000;
@@ -33,9 +33,6 @@ main.use('/customize', customizeRoutes);
 main.use(errorController.get404);
 
 main.use(errorController.get500);
-
-main.listen(ports, () => console.log(`Listening on port ${ports}`));
-
 
 // Kết nối tới thiết bị Modbus
 const client = new Modbus();
@@ -64,7 +61,7 @@ client.connectTCP(MODBUS_TCP_IP, { port: MODBUS_TCP_PORT }, () => {
           floatArray.push(roundedValue);
         }
         //  const lastFloatValue = floatArray[floatArray.length - 1];
-        //console.log('Gia tri doc duoc: ', floatArray);
+        console.log('Gia tri doc duoc: ', floatArray);
 
         data$.insertFloatValue(floatArray);
         // Sử dụng giá trị floatValue cuối cùng
@@ -77,3 +74,5 @@ client.on('error', (err) => {
   console.error('Lỗi kết nối Modbus:', err);
 });
 
+
+main.listen(ports, () => console.log(`Listening on port ${ports}`));
